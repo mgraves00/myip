@@ -15,5 +15,5 @@ kcgi library producted by Kristaps Dzonsons
 
 ## License
 
-All sources use the 2 claus BSD license.
+All sources use the 2 clause BSD license.
 See the [LICENSE.md](LICENSE.md) file for details.
