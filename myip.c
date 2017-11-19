@@ -29,6 +29,8 @@ main(void)
 {
 	struct kreq	 r;
 	enum kcgi_err	 er;
+	char 		*addr = NULL;
+	size_t		i;
 
 	/* Set up our main HTTP context. */
 	er = khttp_parse(&r, NULL, 0, NULL, 0, 0);
@@ -38,6 +40,14 @@ main(void)
 		khttp_free(&r);
 		return(EXIT_FAILURE);
 	}
+	if (r.reqsz > 0) {
+		for (i=0;i<r.reqsz && addr==NULL;i++) {
+			if (strcasecmp("X-Forwarded-For",r.reqs[i].key) == 0)
+				addr = r.reqs[i].val;
+		}
+	}
+	if (addr == NULL) 
+		addr = r.remote;
 
 	khttp_head(&r, kresps[KRESP_STATUS], "%s", khttps[KHTTP_200]);
 	khttp_head(&r, kresps[KRESP_CONTENT_TYPE], "%s", kmimetypes[KMIME_TEXT_PLAIN]);
@@ -45,7 +55,7 @@ main(void)
 	khttp_head(&r, kresps[KRESP_EXPIRES], "%s", "0");
 	khttp_head(&r, kresps[KRESP_PRAGMA], "%s", "no-cache");
 	khttp_body(&r);
-	khttp_puts(&r, r.remote);
+	khttp_puts(&r, addr);
 	khttp_free(&r);
 	return(EXIT_SUCCESS);
 }

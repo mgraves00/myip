@@ -25,6 +25,8 @@
 .Sh DESCRIPTION
 The
 .Nm
-CGI prgram returns the IP address of the caller
+CGI prgram returns the IP address of the caller.  If the address is specified in
+an X-Forwarded-For header this is preferred.  Otherwise the address is taken from
+the connection IP address.
 .Sh AUTHORS
 .An Michael Graves Aq Mt mgravesATbrainfatDOTnet
